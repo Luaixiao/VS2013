@@ -30,11 +30,11 @@ Point *Astar::getLeastFpoint()
 {
 	if (!openList.empty())
 	{
-		auto resPoint = openList.front();
-		for (auto &point : openList)
-		if (point->F < resPoint->F)
+		auto resPoint = openList.front(); //赋初值
+		for (auto &point : openList)  //遍历整个openList中的点
+		if (point->F < resPoint->F)   //比较openList中每个点的F值，找出最小的点
 			resPoint = point;
-		return resPoint;
+		return resPoint;    //返回openList中F值最小的点
 	}
 	return 0;
 }
@@ -115,11 +115,13 @@ bool Astar::isCanreach(const Point *point, const Point *target, bool isIgnoreCor
 		return false;
 	else
 	{
-		if (abs(point->x - target->x) + abs(point->y - target->y) == 1) //非斜角可以  
+		//非对角线的节点，当满足abs(point->x-target->x)+abs(point->y-target->y)==1时
+		//可判定非对角线节点不存在障碍，返回true
+		if (abs(point->x - target->x) + abs(point->y - target->y) == 1) 
 			return true;
-		else
+		else //对角线节点
 		{
-			//斜对角要判断是否绊住  
+			//斜对角要判断是否绊住，即存在障碍. 
 			if (maze[point->x][target->y] == 0 && maze[target->x][point->y] == 0)
 				return true;
 			else
@@ -128,6 +130,7 @@ bool Astar::isCanreach(const Point *point, const Point *target, bool isIgnoreCor
 	}
 }
 
+//得到当前节点周围的可达点
 std::vector<Point *> Astar::getSurroundPoints(const Point *point, bool isIgnoreCorner) const
 {
 	std::vector<Point *> surroundPoints;
